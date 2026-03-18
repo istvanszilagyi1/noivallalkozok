@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SmartFill Legal - Prémium Jogi Megoldások</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,800;1,600;1,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --brand-purple: #6118D9; 
+            --brand-magenta: #D918A0;
+            --brand-pink: #FF66B2; /* Új, lágyabb pink szín */
+            --brand-red: #FF3366;    
+            --text-dark: #1E152A;    
+            --bg-base: #F9F7FC; 
+            --white: #ffffff;
+        }
+
+        html, body {
+            overflow-x: hidden; 
+            margin: 0; padding: 0; width: 100%;
+            background-color: var(--bg-base);
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-dark);
+        }
+
+        * { box-sizing: border-box; scroll-behavior: smooth; }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 10; }
+
+        /* ========== REVEAL ANIMÁCIÓK ========== */
+        .reveal { opacity: 0; transition: all 1s cubic-bezier(0.5, 0, 0, 1); }
+        .reveal-left { transform: translateX(-50px); } /* Kicsit rövidebb út a finomabb hatáshoz */
+        .reveal-right { transform: translateX(50px); }
+        .reveal-up { transform: translateY(40px); }
+        .reveal.active { opacity: 1; transform: translate(0, 0); }
+
+        /* ========== HÁTTÉR MOZGÁS ========== */
+        .hero-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; overflow: hidden; pointer-events: none; }
+        .glow-orb { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.15; animation: driftOrb 20s infinite alternate ease-in-out; }
+        .orb-1 { width: 60vw; height: 60vw; background: var(--brand-magenta); top: -20%; left: -10%; }
+        .orb-2 { width: 50vw; height: 50vw; background: var(--brand-purple); bottom: -10%; right: -10%; animation-delay: -5s; }
+
+        @keyframes driftOrb { from { transform: translate(0, 0) scale(1); } to { transform: translate(80px, 120px) scale(1.1); } }
+
+        /* ========== FEJLÉC ========== */
+        .header-wrapper { position: sticky; top: 15px; z-index: 1000; width: 100%; display: flex; justify-content: center; padding: 0 15px; animation: slideDownFade 0.8s ease-out; }
+        header { width: 100%; max-width: 1200px; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.5); border-radius: 50px; padding: 10px 25px; box-shadow: 0 10px 30px rgba(97, 24, 217, 0.08); display: flex; justify-content: space-between; align-items: center; }
+        .logo img { height: 100px; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .logo img:hover { transform: scale(1.05); }
+
+        .header-contact { background: linear-gradient(45deg, var(--brand-purple), var(--brand-magenta)); color: var(--white); font-weight: 800; text-decoration: none; font-size: clamp(0.85rem, 2vw, 1rem); padding: 12px 25px; border-radius: 50px; transition: 0.3s; box-shadow: 0 5px 15px rgba(217, 24, 160, 0.3); text-transform: uppercase; letter-spacing: 1px; animation: pulseSoft 2s infinite alternate; }
+        .header-contact:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 10px 25px rgba(217, 24, 160, 0.5); }
+
+        /* ========== HERO SZEKCIÓ (Nem változott) ========== */
+        .hero { position: relative; min-height: calc(100vh - 120px); display: flex; align-items: center; justify-content: center; padding: 40px 0 60px 0; }
+        .hero-layout { display: flex; align-items: center; justify-content: space-between; gap: 40px; width: 100%; }
+        .hero-text-box { flex: 1.2; z-index: 20; animation: slideInLeft 1s ease-out forwards; }
+        .hero-bubble { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.9); border-radius: 50px; padding: 50px; box-shadow: 0 30px 60px rgba(97, 24, 217, 0.08); text-align: left; max-width: 550px; position: relative; overflow: hidden; }
+        
+        .hero-bubble::after { content: ''; position: absolute; top: -50%; left: -60%; width: 200%; height: 200%; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.3), transparent 70%); opacity: 0.4; transform: rotate(30deg); animation: shimmer 8s infinite linear; pointer-events: none; }
+        @keyframes shimmer { 0% { transform: rotate(30deg) translateX(-100%) translateY(-30%); } 100% { transform: rotate(30deg) translateX(100%) translateY(30%); } }
+
+        .hero-tag { display: inline-flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.8); border: 1px solid rgba(97, 24, 217, 0.2); color: var(--brand-purple); padding: 8px 20px; border-radius: 50px; font-weight: 800; font-size: 0.85rem; letter-spacing: 1.5px; margin-bottom: 20px; text-transform: uppercase; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .hero-tag i { color: var(--brand-magenta); font-size: 1.1rem; animation: spinSlow 4s linear infinite; }
+
+        .hero-bubble h1 { font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.1; margin-bottom: 20px; color: var(--text-dark); font-family: 'Playfair Display', serif; background: linear-gradient(135deg, var(--text-dark) 0%, var(--brand-purple) 40%, var(--brand-magenta) 80%); background-size: 250% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: gradientFlow 6s ease infinite; }
+        @keyframes gradientFlow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        
+        .hero-bubble p { font-size: 1.1rem; font-weight: 500; margin-bottom: 30px; color: #555; line-height: 1.6; font-family: 'Montserrat', sans-serif; }
+
+        .btn-premium { display: inline-flex; align-items: center; gap: 15px; background: var(--text-dark); color: var(--white); padding: 18px 45px; border-radius: 50px; font-weight: 800; text-decoration: none; font-size: 1.1rem; box-shadow: 0 15px 30px rgba(30, 21, 42, 0.3); transition: 0.4s; overflow: hidden; position: relative; border: none; }
+        .btn-premium::after { content: ''; position: absolute; top: -50%; left: -60%; width: 20%; height: 200%; background: rgba(255,255,255,0.3); transform: rotate(30deg); transition: 0.5s; }
+        .btn-premium:hover { background: var(--brand-purple); transform: translateY(-5px); box-shadow: 0 20px 40px rgba(97, 24, 217, 0.4); }
+        .btn-premium:hover::after { left: 120%; }
+
+        .hero-image-wrap { flex: 1; position: relative; display: flex; justify-content: center; z-index: 5; animation: popIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .elegant-frame { width: 100%; max-width: 450px; position: relative; }
+        .elegant-frame::before { content: ''; position: absolute; top: 25px; right: -20px; width: 100%; height: 100%; background: linear-gradient(135deg, var(--brand-purple), var(--brand-magenta)); border-radius: 30px 100px 30px 100px; z-index: -1; opacity: 0.8; box-shadow: 0 20px 40px rgba(217, 24, 160, 0.3); }
+        .elegant-frame img { width: 100%; height: auto; object-fit: cover; border-radius: 30px 100px 30px 100px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); animation: floatSlow 6s ease-in-out infinite alternate; }
+
+        /* ========== MOBIL NÉZET ========== */
+        @media (max-width: 850px) {
+            .logo img { height: 90px; }
+            .hero { min-height: auto; padding-top: 80px; }
+            .hero-layout { flex-direction: row; align-items: center; justify-content: center; gap: 0; }
+            .hero-image-wrap { flex: 0 0 45%; justify-content: center; margin: 0; }
+            .elegant-frame { max-width: 100%; aspect-ratio: 4/5; border-radius: 100px 100px 20px 20px; border-width: 4px; }
+            .hero-text-box { flex: 0 0 60%; margin-left: 0; margin-right: -15%; z-index: 10; }
+            .hero-bubble { padding: 20px 15px; border-radius: 25px; border-width: 3px; max-width: 100%; }
+            .hero-tag { font-size: 0.8rem; padding: 5px 12px; }
+            .hero-bubble h1 { font-size: 1.1rem; margin-bottom: 10px; }
+            .hero-bubble p { font-size: 0.7rem; margin-bottom: 15px; line-height: 1.3; }
+            .btn-premium { padding: 10px 15px; font-size: 0.7rem; border-radius: 30px; width: 100%; justify-content: center;}
+        }
+
+        /* --- Animációs kulcskockák --- */
+        @keyframes slideDownFade { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideInLeft { 0% { opacity: 0; transform: translateX(-50px); } 100% { opacity: 1; transform: translateX(0); } }
+        @keyframes popIn { 0% { opacity: 0; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1); } }
+        @keyframes spinSlow { 100% { transform: rotate(360deg); } }
+        @keyframes pulseSoft { from { box-shadow: 0 0 0 rgba(217, 24, 160, 0); } to { box-shadow: 0 5px 20px rgba(217, 24, 160, 0.4); } }
+        @keyframes floatSlow { from { transform: translateY(0px); } to { transform: translateY(-15px); } }
+        @keyframes gentleBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        @keyframes alertPulse { 0% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.15); opacity: 1; color: var(--brand-pink); } 100% { transform: scale(1); opacity: 0.8; } }
+
+        /* ========== TOVÁBBI SZEKCIÓK ========== */
+        .services { padding: 80px 0; background: var(--white); position: relative; z-index: 10; overflow: hidden;}
+        .section-title { text-align: center; margin-bottom: 60px; position: relative; z-index: 2;}
+        .section-title h2 { font-size: clamp(2rem, 5vw, 3rem); color: var(--text-dark); }
+        .section-title h2 span { background: linear-gradient(135deg, var(--brand-purple), var(--brand-magenta)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .section-title p { font-size: 1.1rem; max-width: 800px; margin: 20px auto 0; line-height: 1.6; color: #555; }
+
+        .packages-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; width: 100%; position: relative; z-index: 2;}
+        
+        /* Csomag kártyák finomított animációval */
+        .pkg-card { background: var(--bg-base); border-radius: 30px; padding: 30px; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: flex-start; gap: 20px; border: 2px solid transparent; cursor: pointer; position: relative; overflow: hidden;}
+        .pkg-card::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(217,24,160,0.03), rgba(97,24,217,0.05)); opacity: 0; transition: 0.4s; }
+        .pkg-card:hover { background: var(--white); box-shadow: 0 25px 50px rgba(217, 24, 160, 0.1); border-color: rgba(217, 24, 160, 0.2); transform: translateY(-12px) scale(1.02); }
+        .pkg-card:hover::after { opacity: 1; }
+        .pkg-card:hover .pkg-icon { transform: rotate(5deg) scale(1.1); box-shadow: 0 15px 25px rgba(217, 24, 160, 0.4); }
+
+        .pkg-icon { width: 65px; height: 65px; flex-shrink: 0; border-radius: 20px; background: linear-gradient(135deg, var(--brand-purple), var(--brand-magenta)); color: var(--white); display: flex; justify-content: center; align-items: center; font-size: 26px; box-shadow: 0 10px 20px rgba(217, 24, 160, 0.25); transition: 0.4s; position: relative; z-index: 2;}
+        
+        /* Lebegő ikonok a 3 főkártyához */
+        .floating-icon-card .pkg-icon { animation: gentleBounce 4s infinite ease-in-out; }
+        
+        .pkg-content { position: relative; z-index: 2; }
+        .pkg-content h3 { font-size: 1.15rem; margin-bottom: 8px; color: var(--text-dark); transition: 0.3s;}
+        .pkg-card:hover .pkg-content h3 { color: var(--brand-purple); }
+        .pkg-content p { font-size: 0.95rem; color: #666; margin: 0; line-height: 1.5; }
+
+        /* Kiemelt, színes kártyák (Marketing Alap, Extra, VIP) */
+        .pkg-card-premium { background: linear-gradient(135deg, var(--brand-purple), var(--brand-magenta)); color: white; justify-content: center; align-items: center; border: none; transform: scale(1.05); transition: 0.5s; box-shadow: 0 15px 35px rgba(97,24,217,0.2); }
+        .pkg-card-premium:hover { transform: scale(1.1) translateY(-10px); box-shadow: 0 25px 45px rgba(217,24,160,0.4); background: linear-gradient(135deg, var(--brand-magenta), var(--brand-purple)); }
+        .pkg-card-premium h3 { color: white !important; font-size: 1.6rem; margin: 0; text-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+
+        @media (max-width: 600px) {
+            .packages-grid { grid-template-columns: 1fr; gap: 15px; } 
+            .pkg-card { padding: 20px; border-radius: 20px; align-items: center; }
+            .pkg-icon { width: 55px; height: 55px; font-size: 20px; border-radius: 15px; }
+            .pkg-content h3 { font-size: 1.05rem; }
+            .pkg-card-premium { transform: scale(1); }
+            .pkg-card-premium:hover { transform: scale(1.02) translateY(-5px); }
+        }
+
+        /* --- Ügyfél probléma doboz (Finomított dizájn) --- */
+        .story-box { background: linear-gradient(135deg, var(--text-dark) 0%, #302145 100%); color: white; border-radius: 40px; padding: 60px; box-shadow: 0 30px 60px rgba(0,0,0,0.2); margin: 0 auto; max-width: 1000px; text-align: left; position: relative; overflow: hidden; transition: 0.4s; border: 1px solid rgba(255,102,178,0.1); }
+        .story-box:hover { box-shadow: 0 40px 80px rgba(217,24,160,0.3); transform: translateY(-5px); border-color: rgba(217,24,160,0.3); }
+        
+        /* Fénycsóva effektus */
+        .story-box::after { content: ''; position: absolute; top: -50%; left: -60%; width: 20%; height: 200%; background: rgba(255,255,255,0.05); transform: rotate(30deg); transition: 0.8s; pointer-events: none; }
+        .story-box:hover::after { left: 120%; }
+
+        .story-box::before { content: '"'; position: absolute; top: -20px; right: 20px; font-size: 250px; font-family: 'Playfair Display', serif; opacity: 0.08; color: var(--brand-pink); line-height: 1; transition: 0.4s; }
+        .story-box:hover::before { transform: scale(1.1) rotate(5deg); opacity: 0.12; color: var(--brand-magenta); }
+
+        .story-box h3 { font-size: clamp(2rem, 4vw, 2.5rem); margin-bottom: 20px; color: var(--brand-pink); }
+        .story-box p { font-size: 1.15rem; line-height: 1.8; margin-bottom: 15px; color: #e0d8ea; position: relative; z-index: 2; }
+        
+        .story-highlight { background: rgba(217,24,160,0.1); border-left: 5px solid var(--brand-magenta); padding: 25px; margin-top: 30px; font-size: 1.15rem; border-radius: 0 20px 20px 0; position: relative; z-index: 2; transition: 0.3s; }
+        .story-box:hover .story-highlight { background: rgba(217,24,160,0.15); border-color: var(--brand-pink); }
+
+        @media (max-width: 768px) { .story-box { padding: 30px; } .story-highlight { padding: 15px; font-size: 1rem;} }
+
+        /* --- FAQ / Listák (Pulzáló ikonokkal) --- */
+        .faq-section { max-width: 900px; margin: 0 auto; padding: 0 20px; text-align: center;}
+        .faq-container { display: flex; flex-direction: column; gap: 15px; justify-content: center; max-width: 800px; margin: 0 auto; }
+        .faq-item { background: var(--white); border: 2px solid transparent; padding: 20px 25px; border-radius: 20px; font-weight: 700; font-size: 1.05rem; color: var(--brand-purple); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 5px 15px rgba(0,0,0,0.03); text-align: left; display: flex; align-items: center; gap: 15px; position: relative; overflow: hidden;}
+        .faq-item i { color: var(--brand-magenta); font-size: 1.4rem; animation: alertPulse 2s infinite ease-in-out; transition: 0.3s; }
+        
+        .faq-item:hover { border-color: rgba(217, 24, 160, 0.3); transform: translateX(10px); box-shadow: -5px 10px 25px rgba(217, 24, 160, 0.1); background: linear-gradient(90deg, var(--white) 80%, #fff0f8 100%); }
+        .faq-item:hover i { animation: none; transform: scale(1.2); color: var(--brand-red); }
+
+        @media (max-width: 600px) { .faq-item { font-size: 0.95rem; padding: 15px; } .faq-item:hover { transform: translateY(-5px); translateX(0); } }
+
+        /* --- Footer CTA --- */
+        .footer-cta { background: linear-gradient(135deg, var(--text-dark), #2a1b3d); color: var(--white); padding: 100px 20px; text-align: center; border-radius: 50px 50px 0 0; margin-top: 50px; position: relative; overflow: hidden; }
+        .footer-cta::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--brand-magenta), var(--brand-purple), transparent); }
+        .cta-btn { background: linear-gradient(90deg, var(--brand-magenta), var(--brand-red)); color: var(--white); padding: 20px 50px; border-radius: 50px; font-weight: 900; text-decoration: none; display: inline-block; margin-top: 35px; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 15px 35px rgba(255, 51, 102, 0.4); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; overflow: hidden; }
+        .cta-btn::after { content: ''; position: absolute; top: -50%; left: -60%; width: 20%; height: 200%; background: rgba(255,255,255,0.3); transform: rotate(30deg); transition: 0.5s; }
+        .cta-btn:hover { transform: scale(1.08) translateY(-5px); box-shadow: 0 25px 45px rgba(255, 51, 102, 0.6); }
+        .cta-btn:hover::after { left: 120%; }
+
+        footer { padding: 40px 20px; background: #130C1C; color: #a097ad; text-align: center; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+    <div class="hero-bg">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+    </div>
+
+    <div class="header-wrapper">
+        <header>
+            <a href="#" class="logo"><img src="logo.png" alt="SmartFill Logo"></a>
+            <a href="#kapcsolat" class="header-contact">Kapcsolat</a>
+        </header>
+    </div>
+
+    <section class="hero">
+        <div class="container hero-layout">
+            <div class="hero-text-box">
+                <div class="hero-bubble">
+                    <span class="hero-tag"><i class="fa-solid fa-asterisk"></i> Okos Jogi Megoldások</span>
+                    <h1>Hogy a cégvezetőknek ne kelljen jogászkodniuk.</h1>
+                    <p>
+                        <strong>Dr. Tóth Judit Lenke</strong><br>
+                        Adatvédelmi szakjogász, compliance szakértő és a SmartFill Legal alapítója. Több száz cégnek segített már elkerülni bírságokat és jogi kockázatokat. Küldetése, hogy a jog ne akadály legyen, hanem működő rendszer a vállalkozásokban.
+                    </p>
+                    <a href="#kapcsolat" class="btn-premium">Megoldás marketingre <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+            <div class="hero-image-wrap">
+                <div class="elegant-frame">
+                    <img src="judit.jpg" alt="Dr. Tóth Judit Lenke">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="services" style="padding-top: 20px; padding-bottom: 40px;">
+        <div class="container reveal reveal-up">
+            <div class="section-title">
+                <h2>Amiben <span>jók vagyunk...</span></h2>
+                <p>A SmartFill egy olyan rendszer, ami automatizálja a jogi megfelelést. Mi megoldjuk a jogi kivitelezést... frissítünk ha kell, módosítunk, ha a jogszabály előírja, tájékoztatunk, ha szükséges...</p>
+            </div>
+            
+            <div class="packages-grid" style="max-width: 900px; margin: 0 auto;">
+                <div class="pkg-card floating-icon-card" style="background: var(--white); justify-content: center; text-align: center; flex-direction: column; align-items: center;">
+                    <div class="pkg-icon" style="margin-bottom: 10px;"><i class="fa-solid fa-qrcode"></i></div>
+                    <h3>QR-kódos adatkezelési tájékoztatók</h3>
+                </div>
+                <div class="pkg-card floating-icon-card" style="background: var(--white); justify-content: center; text-align: center; flex-direction: column; align-items: center;">
+                    <div class="pkg-icon" style="margin-bottom: 10px; animation-delay: 0.5s;"><i class="fa-solid fa-file-signature"></i></div>
+                    <h3>Azonnal használható, kész dokumentáció</h3>
+                </div>
+                <div class="pkg-card floating-icon-card" style="background: var(--white); justify-content: center; text-align: center; flex-direction: column; align-items: center;">
+                    <div class="pkg-icon" style="margin-bottom: 10px; animation-delay: 1s;"><i class="fa-solid fa-stopwatch"></i></div>
+                    <h3>Nincs több halogatás... Csak használni kell!</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="services" style="background: transparent; padding-top: 40px;">
+        <div class="container reveal reveal-up">
+            <div class="section-title">
+                <h2>Miért fontos ez neked a <span>MARKETING</span> területén?</h2>
+                <p>A legtöbb vállalkozó nem tudja mivel jár a marketing terület GDPR megfeleltetése... fogalmuk sincs milyen adatkezeléseket kell leszabályozni. <br><br><strong>Íme a legfontosabb kérdéskörök, amit rosszul, vagy egyáltalán nem szabályoznak:</strong></p>
+            </div>
+            
+            <div class="faq-container">
+                <div class="faq-item reveal reveal-left" style="transition-delay: 0.1s;"><i class="fa-solid fa-circle-exclamation"></i> Facebook csoportod van? Van hozzá megfelelő adatkezelési tájékoztatód?</div>
+                <div class="faq-item reveal reveal-right" style="transition-delay: 0.2s;"><i class="fa-solid fa-circle-exclamation"></i> TikTok videók kezelése, posztolása hogy lesz jogszerű?</div>
+                <div class="faq-item reveal reveal-left" style="transition-delay: 0.3s;"><i class="fa-solid fa-circle-exclamation"></i> Hírlevél → lehet 2018 előtt gyűjött címlistára küldeni?</div>
+                <div class="faq-item reveal reveal-right" style="transition-delay: 0.4s;"><i class="fa-solid fa-circle-exclamation"></i> Podcast → külön szabályozás kell a podcast felvételhez?</div>
+                <div class="faq-item reveal reveal-left" style="transition-delay: 0.5s;"><i class="fa-solid fa-circle-exclamation"></i> Letölthető csali anyag → jogos érdek alapján történik?</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="services" style="padding-top: 40px; background: transparent;">
+        <div class="container reveal reveal-up">
+            <div class="story-box">
+                <h3>Ügyfél probléma</h3>
+                <p>Egy ügyfelem több százezer forintért készített egy teljes podcast sorozatot egy partnerrel, minden technikai és marketing feltételt biztosítva. A felvételek elkészültek, de a publikálás előtt összevesztek.</p>
+                <p>A partner ezután megtiltotta a tartalom felhasználását arra hivatkozva, hogy nem járult hozzá megfelelően a felvételekhez. Mivel nem volt előre rendezve az adatkezelés és a felhasználási jog, a teljes sorozat jogilag használhatatlanná vált.</p>
+                
+                <div class="story-highlight">
+                    <strong style="color: var(--brand-pink);">Az eredmény:</strong> Több százezer forint és rengeteg munka veszett el egyetlen, előre nem kezelt jogi hiba miatt.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="services">
+        <div class="container">
+            <div class="section-title reveal reveal-up">
+                <h2>Megoldás: Marketing csomagok<br><span>akár már 29.900 Ft-tól...</span></h2>
+            </div>
+            
+            <div class="packages-grid reveal reveal-up" style="margin-bottom: 80px;">
+                <div class="pkg-card-premium">
+                    <h3>Marketing Alap</h3>
+                </div>
+                <div class="pkg-card-premium" style="transition-delay: 0.1s;">
+                    <h3>Marketing Extra</h3>
+                </div>
+                <div class="pkg-card-premium" style="transition-delay: 0.2s;">
+                    <h3>Marketing VIP</h3>
+                </div>
+            </div>
+
+            <div class="section-title reveal reveal-up">
+                <h2>Mit kapsz?</h2>
+                <p>Egyszer megcsinálod. Utána működik....</p>
+            </div>
+
+            <div class="packages-grid">
+                <div class="pkg-card reveal reveal-up">
+                    <div class="pkg-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="pkg-content">
+                        <h3>Minden lefedve</h3>
+                        <p>Minden marketing adatkezelés lefedve.</p>
+                    </div>
+                </div>
+                <div class="pkg-card reveal reveal-up" style="transition-delay: 0.1s;">
+                    <div class="pkg-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="pkg-content">
+                        <h3>Kész rendszer</h3>
+                        <p>Kész, azonnal használható rendszer.</p>
+                    </div>
+                </div>
+                <div class="pkg-card reveal reveal-up" style="transition-delay: 0.2s;">
+                    <div class="pkg-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="pkg-content">
+                        <h3>QR-kód</h3>
+                        <p>QR-kódos megoldás.</p>
+                    </div>
+                </div>
+                <div class="pkg-card reveal reveal-up" style="transition-delay: 0.3s;">
+                    <div class="pkg-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="pkg-content">
+                        <h3>Folyamatos frissítés</h3>
+                        <p>Jogszabálykövetés és frissítés.</p>
+                    </div>
+                </div>
+                <div class="pkg-card reveal reveal-up" style="transition-delay: 0.4s;">
+                    <div class="pkg-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="pkg-content">
+                        <h3>Nem kell betanítani</h3>
+                        <p>Nem kell betanítani a csapatot, hogy kinek mi a feladata, mit hogyan használjon.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="reveal reveal-up" style="text-align: center; padding: 40px 20px;">
+        <h3 style="color: var(--brand-purple); margin-bottom: 30px; font-size: 1.5rem;">Ahol Juditról hallani lehetett</h3>
+        <img src="premium_logos.png" alt="Média" style="max-width: 90%; opacity: 0.8; transition: 0.5s; cursor: pointer;" onmouseover="this.style.opacity='1'; this.style.transform='scale(1.02)';" onmouseout="this.style.opacity='0.8'; this.style.transform='scale(1)';">
+    </section>
+
+    <section class="footer-cta reveal reveal-up" id="kapcsolat">
+        <div class="container">
+            <h2 style="font-size: clamp(2rem, 6vw, 3.5rem); margin-bottom: 10px; line-height: 1.1;">PRIVACY GIRLS - ADATVÉDELEM</h2>
+            <p style="font-size: clamp(1rem, 2.5vw, 1.2rem); opacity: 0.9; margin-top: 20px; max-width: 800px; margin-left: auto; margin-right: auto; line-height: 1.6;">
+                Csatlakozz a Privacy Girls közösséghez – egy biztonságos tér nőknek, ahol nem maradsz egyedül az online visszaélésekkel...<br><br>
+                Érthető adatvédelem, valódi támogatás, közös fellépés a jogtalanság ellen! Ha biztonságban akarod tudni a digitális platformjaidat, fényképedet, szeretteidet, itt a helyed...
+            </p>
+            <a href="mailto:iroda@smartfill.hu" class="cta-btn">Csatlakozz most a közösséghez!</a>
+        </div>
+    </section>
+
+    <footer>
+        <p><strong>BUDAPEST ONE</strong> - 1112 Budapest, Balatoni út 2A B Épület</p>
+        <p>📞 +36 30 211 7908 &nbsp;|&nbsp; 📧 iroda@smartfill.hu</p>
+        <p style="margin-top: 10px;">
+            <a href="https://www.smartfill.hu" style="color: #a097ad; text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='var(--brand-pink)';" onmouseout="this.style.color='#a097ad';">www.smartfill.hu</a> | 
+            <a href="https://www.penzmosasinfo.hu" style="color: #a097ad; text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='var(--brand-pink)';" onmouseout="this.style.color='#a097ad';">www.penzmosasinfo.hu</a> | 
+            <a href="https://www.jogvallalkozoknak.hu" style="color: #a097ad; text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='var(--brand-pink)';" onmouseout="this.style.color='#a097ad';">www.jogvallalkozoknak.hu</a>
+        </p>
+        <p style="margin-top: 20px; opacity: 0.4;">© 2026 SmartFill Legal - Minden jog fenntartva.</p>
+    </footer>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 }); // Kicsit hamarabb indulnak az animációk görgetéskor
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+
+</body>
+</html>
