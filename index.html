@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SmartFill Legal - Prémium Jogi Megoldások</title>
     
+    <!-- Google Fonts: csak a kért betűtípusok (nincs Dancing Script) -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,800;1,600;1,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -31,8 +32,40 @@
 
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 10; }
 
+        /* ========== REVEAL ANIMÁCIÓK (becsúszás görgetésre) ========== */
+        .reveal {
+            opacity: 0;
+            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal-left {
+            transform: translateX(-80px);
+        }
+        .reveal-right {
+            transform: translateX(80px);
+        }
+        .reveal-up {
+            transform: translateY(60px);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translate(0, 0);
+        }
+
         /* ========================================= */
-        /* KREATÍV, LEBEGŐ FEJLÉC (Glass Pill)       */
+        /* HÁTTÉR MOZGÁS                             */
+        /* ========================================= */
+        .hero-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; overflow: hidden; pointer-events: none; }
+        .glow-orb {
+            position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.15;
+            animation: driftOrb 20s infinite alternate ease-in-out;
+        }
+        .orb-1 { width: 60vw; height: 60vw; background: var(--brand-magenta); top: -20%; left: -10%; }
+        .orb-2 { width: 50vw; height: 50vw; background: var(--brand-purple); bottom: -10%; right: -10%; animation-delay: -5s; }
+
+        @keyframes driftOrb { from { transform: translate(0, 0) scale(1); } to { transform: translate(80px, 120px) scale(1.1); } }
+
+        /* ========================================= */
+        /* FEJLÉC (üveg gombostű)                    */
         /* ========================================= */
         .header-wrapper {
             position: sticky; top: 15px; z-index: 1000;
@@ -53,7 +86,7 @@
         }
 
         .logo img { 
-            height: 90px; 
+            height: 100px; 
             transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
         }
         .logo img:hover { transform: scale(1.05); }
@@ -70,7 +103,7 @@
         .header-contact:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 10px 25px rgba(217, 24, 160, 0.5); }
 
         /* ========================================= */
-        /* KREATÍV HERO SZEKCIÓ                      */
+        /* HERO SZEKCIÓ – KREATÍV, TEXTBOX ANIMÁCIÓVAL */
         /* ========================================= */
         .hero { 
             position: relative;
@@ -79,25 +112,43 @@
             padding: 40px 0 60px 0;
         }
 
-        /* Élő, mozgó háttérfények */
-        .hero-bg {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; overflow: hidden;
-        }
-        .glow-orb {
-            position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.15;
-            animation: driftOrb 12s infinite alternate ease-in-out;
-        }
-        .orb-1 { width: 50vw; height: 50vw; background: var(--brand-magenta); top: -10%; left: -10%; }
-        .orb-2 { width: 40vw; height: 40vw; background: var(--brand-purple); bottom: 10%; right: -5%; animation-delay: -5s; }
-
         .hero-layout {
             display: flex; align-items: center; justify-content: space-between; gap: 40px; width: 100%;
         }
 
-        /* BAL OLDAL: Szöveg */
+        /* ----- BAL OLDAL: BUBORÉK + SZÖVEGANIMÁCIÓ ----- */
         .hero-text-box {
-            flex: 1.2; z-index: 10;
+            flex: 1.2; z-index: 20;
             animation: slideInLeft 1s ease-out forwards; 
+        }
+
+        .hero-bubble {
+            background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.9); border-radius: 50px;
+            padding: 50px; box-shadow: 0 30px 60px rgba(97, 24, 217, 0.08);
+            text-align: left; max-width: 550px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Kreatív rész: villanó fény a buborék szélén */
+        .hero-bubble::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.3), transparent 70%);
+            opacity: 0.4;
+            transform: rotate(30deg);
+            animation: shimmer 8s infinite linear;
+            pointer-events: none;
+        }
+
+        @keyframes shimmer {
+            0% { transform: rotate(30deg) translateX(-100%) translateY(-30%); }
+            100% { transform: rotate(30deg) translateX(100%) translateY(30%); }
         }
 
         .hero-tag {
@@ -109,19 +160,30 @@
         }
         .hero-tag i { color: var(--brand-magenta); font-size: 1.1rem; animation: spinSlow 4s linear infinite; }
 
-        .hero-text-box h1 { 
-            font-size: clamp(2.5rem, 6vw, 4.5rem); 
-            line-height: 1.05; margin-bottom: 25px; 
-            background: linear-gradient(to right, var(--text-dark) 20%, var(--brand-purple) 60%, var(--brand-magenta) 100%);
-            background-size: 200% auto;
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: gradientText 5s linear infinite;
+        .hero-bubble h1 { 
+            font-size: clamp(2rem, 5vw, 3.5rem); 
+            line-height: 1.1; margin-bottom: 20px; 
+            color: var(--text-dark);
+            font-family: 'Playfair Display', serif;
+            /* szöveganimáció: színátmenetes megjelenés */
+            background: linear-gradient(135deg, var(--text-dark) 0%, var(--brand-purple) 40%, var(--brand-magenta) 80%);
+            background-size: 250% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientFlow 6s ease infinite;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         
-        .hero-text-box p { 
-            font-size: clamp(1.1rem, 2vw, 1.3rem); 
-            font-weight: 600; margin-bottom: 40px; color: #555; max-width: 500px;
+        .hero-bubble p { 
+            font-size: 1.1rem; 
+            font-weight: 500; margin-bottom: 30px; color: #555; 
             line-height: 1.6;
+            font-family: 'Montserrat', sans-serif;
         }
 
         .btn-premium {
@@ -131,6 +193,7 @@
             text-decoration: none; font-size: 1.1rem;
             box-shadow: 0 15px 30px rgba(30, 21, 42, 0.3);
             transition: 0.4s; overflow: hidden; position: relative;
+            border: none;
         }
         .btn-premium::after {
             content: ''; position: absolute; top: -50%; left: -60%; width: 20%; height: 200%;
@@ -139,7 +202,7 @@
         .btn-premium:hover { background: var(--brand-purple); transform: translateY(-5px); box-shadow: 0 20px 40px rgba(97, 24, 217, 0.4); }
         .btn-premium:hover::after { left: 120%; }
 
-        /* JOBB OLDAL: Elegáns, stabil Kép */
+        /* ----- JOBB OLDAL: KÉP ÉS LEBEGŐ BADGE-EK ----- */
         .hero-image-wrap {
             flex: 1; position: relative; display: flex; justify-content: center; z-index: 5;
             animation: popIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
@@ -166,75 +229,88 @@
             animation: floatSlow 6s ease-in-out infinite alternate;
         }
 
-        /* Lebegő jelvények */
+        /* lebegő jelvények – extra kreatív csavar: változó színek */
         .floating-badge {
-            position: absolute; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
-            padding: 15px 25px; border-radius: 50px; font-weight: 800; color: var(--brand-purple);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15); z-index: 15;
-            display: flex; align-items: center; gap: 12px;
-            animation: hoverBadge 4s infinite alternate ease-in-out;
-            border: 1px solid rgba(255,255,255,0.5);
+            position: absolute; background: white; padding: 10px 20px; border-radius: 50px;
+            font-weight: 800; color: var(--brand-purple); font-size: 0.9rem;
+            box-shadow: 0 15px 25px rgba(0,0,0,0.1); z-index: 30;
+            display: flex; align-items: center; gap: 8px;
+            animation: floatBadge 4s infinite alternate ease-in-out;
+            border: 1px solid rgba(255,255,255,0.8);
+            backdrop-filter: blur(4px);
         }
-        .badge-1 { top: 10%; left: -40px; font-size: 0.9rem; }
-        .badge-2 { bottom: 15%; right: -30px; font-size: 0.9rem; animation-delay: -2s; }
-        .icon-box { background: var(--brand-purple); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;}
-        .badge-2 .icon-box { background: var(--brand-red); }
+        .badge-1 { top: 10%; left: -40px; background: #ffeef8; }
+        .badge-2 { bottom: 15%; right: -30px; background: #f0eaff; animation-delay: -1.5s; }
 
-        .scroll-indicator {
-            display: none; position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
-            color: var(--brand-purple); font-size: 2rem; animation: bounce 2s infinite; z-index: 20;
+        .badge-1 i { color: #FFD700; }
+        .badge-2 i { color: var(--brand-purple); }
+
+        @keyframes floatBadge {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-18px) rotate(2deg); }
         }
 
-        /* === MOBILOS NÉZET (JAVÍTVA) === */
-        /* === MOBILOS NÉZET (JAVÍTVA) === */
-        @media (max-width: 900px) {
-            .logo img { height: 60px; } 
-            .header-contact { font-size: 0.75rem; padding: 10px 15px; }
+        @keyframes floatSlow { from { transform: translateY(0px); } to { transform: translateY(-15px); } }
+
+        /* ========================================= */
+        /* MOBIL NÉZET – PONTOSAN A 2. HTML SZERINT   */
+        /* ========================================= */
+        @media (max-width: 850px) {
+            .logo img { height: 90px; }
+            .hero { min-height: auto; padding-top: 80px; }
             
-            /* JAVÍTÁS: column-reverse, így a kép kerül felülre, a szöveg alulra */
-            .hero { min-height: auto; padding: 40px 0 60px 0; }
-            .hero-layout { flex-direction: column-reverse; gap: 50px; }
-
-            /* Kép és keret optimalizálása */
-            .hero-image-wrap { width: 100%; margin: 0; }
-            .elegant-frame { max-width: 250px; margin: 0 auto; }
-            .elegant-frame::before { top: 15px; right: -15px; }
-
-            /* JAVÍTÁS: Jelvények beigazítása, hogy ne lógjanak le a képernyőről */
-            .badge-1 { top: 0px; left: -5px; font-size: 0.75rem; padding: 8px 12px; }
-            .badge-2 { bottom: 10px; right: -5px; font-size: 0.75rem; padding: 8px 12px; }
-
-            /* Szövegdoboz, ami egy elegáns kártyaként jelenik meg alul */
-            .hero-text-box {
-                margin-top: 0; 
-                background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(20px);
-                border: 1px solid rgba(255,255,255,0.8);
-                border-radius: 30px; 
-                padding: 30px 20px; text-align: center;
-                box-shadow: 0 15px 40px rgba(0,0,0,0.08); width: 100%;
-                display: flex; flex-direction: column; align-items: center;
+            .hero-layout { 
+                flex-direction: row; 
+                align-items: center; 
+                justify-content: center;
+                gap: 0;
             }
 
-            .hero-text-box h1 { font-size: clamp(1.8rem, 7vw, 2.2rem); margin-bottom: 15px; }
-            .hero-text-box p { font-size: 0.95rem; margin-bottom: 25px; line-height: 1.5; }
-            .btn-premium { width: 100%; justify-content: center; font-size: 1rem; padding: 15px 20px; }
-            .scroll-indicator { display: none; }
+            .hero-image-wrap {
+                flex: 0 0 45%;
+                justify-content: center;
+                margin: 0;
+            }
+
+            .elegant-frame {
+                max-width: 100%;
+                aspect-ratio: 4/5;
+                border-radius: 100px 100px 20px 20px;
+                border-width: 4px;
+            }
+
+            .hero-text-box {
+                flex: 0 0 60%;
+                margin-left: 0;       /* Visszatesszük a bal szélét a helyére */
+                margin-right: -15%;   /* Ezzel a képre fog rácsúszni befelé */
+                z-index: 10;          /* Biztosítja, hogy a szöveg a kép felett legyen */
+            }
+
+            .hero-bubble {
+                padding: 20px 15px;
+                border-radius: 25px;
+                border-width: 3px;
+                max-width: 100%;
+            }
+
+            .hero-tag { font-size: 0.8rem; padding: 5px 12px; }
+            .hero-bubble h1 { font-size: 1.1rem; margin-bottom: 10px; }
+            .hero-bubble p { font-size: 0.7rem; margin-bottom: 15px; line-height: 1.3; }
+            .btn-premium { padding: 10px 15px; font-size: 0.7rem; border-radius: 30px; width: 100%; justify-content: center;}
+
+            .badge-1 { top: 0; left: 0; font-size: 0.6rem; padding: 5px 10px; }
+            .badge-2 { display: none; }
         }
 
-        /* --- Animációk --- */
+        /* --- Általános animációs keyframek --- */
         @keyframes slideDownFade { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideInLeft { 0% { opacity: 0; transform: translateX(-50px); } 100% { opacity: 1; transform: translateX(0); } }
         @keyframes popIn { 0% { opacity: 0; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1); } }
-        @keyframes gradientText { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
-        @keyframes hoverBadge { from { transform: translateY(0) rotate(0deg); } to { transform: translateY(-12px) rotate(2deg); } }
-        @keyframes floatSlow { from { transform: translateY(0px); } to { transform: translateY(-15px); } }
-        @keyframes driftOrb { from { transform: translate(0, 0); } to { transform: translate(50px, 50px); } }
         @keyframes spinSlow { 100% { transform: rotate(360deg); } }
         @keyframes pulseSoft { from { box-shadow: 0 0 0 rgba(217, 24, 160, 0); } to { box-shadow: 0 5px 20px rgba(217, 24, 160, 0.4); } }
-        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0) translateX(-50%); } 40% { transform: translateY(-15px) translateX(-50%); } 60% { transform: translateY(-7px) translateX(-50%); } }
 
         /* ========================================= */
-        /* TÖBBI SZEKCIÓ (Kilógásmentes rácsok)      */
+        /* TOVÁBBI SZEKCIÓK (reveal osztályokkal)    */
         /* ========================================= */
         .services { padding: 80px 0; background: var(--white); position: relative; z-index: 10; }
         .section-title { text-align: center; margin-bottom: 60px; }
@@ -274,7 +350,7 @@
             .pkg-content h3 { font-size: 1.05rem; }
         }
 
-        /* --- Stock Fotó --- */
+        /* --- Stock fotó szekció --- */
         .stock-section { padding: 40px 20px; text-align: center; }
         .stock-wrapper { 
             position: relative; max-width: 1100px; margin: 0 auto; 
@@ -295,7 +371,7 @@
             .stock-wrapper img { height: 350px; }
         }
 
-        /* --- Gyakori Kérdések --- */
+        /* --- FAQ --- */
         .faq-section { max-width: 900px; margin: 80px auto; padding: 0 20px; text-align: center;}
         .faq-title { font-size: 2.2rem; color: var(--text-dark); margin-bottom: 40px; }
         .faq-container { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; }
@@ -306,7 +382,7 @@
         }
         .faq-item:hover { border-color: var(--brand-magenta); transform: translateY(-5px); box-shadow: 0 10px 25px rgba(217, 24, 160, 0.15); }
 
-        /* --- Kapcsolat / Footer CTA --- */
+        /* --- Footer CTA --- */
         .footer-cta { 
             background: linear-gradient(135deg, var(--text-dark), var(--brand-purple)); 
             color: var(--white); padding: 80px 20px; 
@@ -337,14 +413,17 @@
         </header>
     </div>
 
+    <!-- HERO SZEKCIÓ – kreatív textbox, mobilnézet pontosan a 2. html szerint -->
     <section class="hero">
         <div class="container hero-layout">
             
             <div class="hero-text-box">
-                <span class="hero-tag"><i class="fa-solid fa-asterisk"></i> Okos Jogi Megoldások</span>
-                <h1>„A saját tartalmad sem biztos, hogy a tiéd.”</h1>
-                <p>Női vállalkozók, tartalomgyártók és online szolgáltatók részére. Építs biztonságos digitális jelenlétet a bírságok helyett.</p>
-                <a href="#kapcsolat" class="btn-premium">Jogszerű tartalomhasználat <i class="fa-solid fa-arrow-right"></i></a>
+                <div class="hero-bubble">
+                    <span class="hero-tag"><i class="fa-solid fa-asterisk"></i> Okos Jogi Megoldások</span>
+                    <h1>„A saját tartalmad sem biztos, hogy a tiéd.”</h1>
+                    <p>Női vállalkozók, tartalomgyártók és online szolgáltatók részére. Építs biztonságos digitális jelenlétet a bírságok helyett.</p>
+                    <a href="#kapcsolat" class="btn-premium">Jogszerű tartalomhasználat <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
             </div>
 
             <div class="hero-image-wrap">
@@ -354,20 +433,10 @@
             </div>
 
         </div>
-        <i class="fa-solid fa-chevron-down scroll-indicator"></i>
     </section>
 
-    <script>
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) { entry.target.classList.add('visible'); }
-            });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-    </script>
-
-    <section class="stock-section fade-in">
+    <!-- STOCK FOTÓ (reveal balról) -->
+    <section class="stock-section reveal reveal-left" id="stock">
         <div class="stock-wrapper">
             <img src="https://www.shutterstock.com/image-photo/40s-mature-professional-business-leader-600nw-2717417153.jpg" alt="Női vállalkozó">
             <div class="stock-overlay">
@@ -377,49 +446,50 @@
         </div>
     </section>
 
-    <section class="services fade-in">
+    <!-- SZOLGÁLTATÁSOK (kártyák reveal up) -->
+    <section class="services">
         <div class="container">
-            <div class="section-title">
+            <div class="section-title reveal reveal-up">
                 <h2>GDPR és adatvédelmi <span>csomagjaink</span></h2>
             </div>
             
             <div class="packages-grid">
-                <div class="pkg-card">
+                <div class="pkg-card reveal reveal-up">
                     <div class="pkg-icon"><i class="fa-solid fa-chart-line"></i></div>
                     <div class="pkg-content">
                         <h3>Marketing adatkezelés</h3>
                         <p>Web, social, hírlevél teljeskörű lefedése.</p>
                     </div>
                 </div>
-                <div class="pkg-card">
+                <div class="pkg-card reveal reveal-up" style="transition-delay: 0.1s;">
                     <div class="pkg-icon"><i class="fa-solid fa-handshake"></i></div>
                     <div class="pkg-content">
                         <h3>Együttműködések</h3>
                         <p>Influencer, partner és vendég szerződések.</p>
                     </div>
                 </div>
-                <div class="pkg-card">
+                <div class="pkg-card reveal reveal-up" style="transition-delay: 0.2s;">
                     <div class="pkg-icon"><i class="fa-solid fa-video"></i></div>
                     <div class="pkg-content">
                         <h3>Tartalomgyártás</h3>
                         <p>Videó, fotó és podcast jogi védelme.</p>
                     </div>
                 </div>
-                <div class="pkg-card">
+                <div class="pkg-card reveal reveal-up" style="transition-delay: 0.3s;">
                     <div class="pkg-icon"><i class="fa-solid fa-qrcode"></i></div>
                     <div class="pkg-content">
                         <h3>QR-kódos megoldás</h3>
                         <p>Azonnal használható digitális tájékoztatók.</p>
                     </div>
                 </div>
-                <div class="pkg-card">
+                <div class="pkg-card reveal reveal-up" style="transition-delay: 0.4s;">
                     <div class="pkg-icon"><i class="fa-solid fa-envelope-open-text"></i></div>
                     <div class="pkg-content">
                         <h3>Listaépítés</h3>
                         <p>Hírlevél és csali anyagok jogszerűen.</p>
                     </div>
                 </div>
-                <div class="pkg-card">
+                <div class="pkg-card reveal reveal-up" style="transition-delay: 0.5s;">
                     <div class="pkg-icon"><i class="fa-solid fa-graduation-cap"></i></div>
                     <div class="pkg-content">
                         <h3>Valódi jogi háttér</h3>
@@ -430,7 +500,8 @@
         </div>
     </section>
 
-    <section class="faq-section fade-in">
+    <!-- FAQ (reveal jobbról) -->
+    <section class="faq-section reveal reveal-right">
         <h3 class="faq-title">Gyakran ismételt kérdések</h3>
         <div class="faq-container">
             <div class="faq-item">Posztolhatok ügyfelekről fotót?</div>
@@ -440,12 +511,14 @@
         </div>
     </section>
 
-    <section class="fade-in" style="text-align: center; padding: 40px 20px;">
+    <!-- MÉDIA LOGÓK (reveal balról) -->
+    <section class="reveal reveal-left" style="text-align: center; padding: 40px 20px;">
         <h3 style="color: var(--brand-purple); margin-bottom: 30px; font-size: 1.5rem;">Ahol Juditról hallani lehetett</h3>
         <img src="premium_logos.png" alt="Média" style="max-width: 90%; opacity: 0.8;">
     </section>
 
-    <section class="footer-cta fade-in" id="kapcsolat">
+    <!-- FOOTER CTA (reveal up) -->
+    <section class="footer-cta reveal reveal-up" id="kapcsolat">
         <div class="container">
             <h2 style="font-size: clamp(2rem, 6vw, 3.5rem); margin-bottom: 10px; line-height: 1.1;">Építs biztonságos<br>online jelenlétet.</h2>
             <p style="font-size: clamp(1.1rem, 3vw, 1.3rem); opacity: 0.9; margin-top: 20px;">Mi megadjuk hozzá a masszív jogi hátteret.</p>
@@ -458,6 +531,19 @@
         <p>📞 +36 (30) 211-7908 &nbsp;|&nbsp; 📧 iroda@smartfill.hu</p>
         <p style="margin-top: 20px; opacity: 0.4;">© 2026 SmartFill Legal - Minden jog fenntartva.</p>
     </footer>
+
+    <script>
+        // Reveal animációk görgetésre
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
 
 </body>
 </html>
