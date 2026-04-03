@@ -4,22 +4,28 @@
     <meta charset="UTF-8">
     <title>Átirányítás...</title>
     <script>
-        // 1. Megnézzük, mit írt be a látogató a perjel után (pl. "kovacskft")
+        // 1. Megnézzük, mit írt be a látogató a perjel után (pl. "kovacskft" vagy "adatvedelem")
         var path = window.location.pathname.replace(/^\/|\/$/g, ''); 
 
-        // 2. Döntünk, hova küldjük
+        // 2. Döntünk, hova küldjük (a közlekedési rendőr szabályai)
         if (path === '' || path === 'index.html' || path === 'index') {
-            // Ha a sima főoldalra jött, menjen a női vállalkozókhoz
+            // Szabály 1: Ha a sima főoldalra jött, menjen a női vállalkozókhoz
             window.location.replace("/noivallalkozok/");
+            
         } else if (path.startsWith('noivallalkozok')) {
-            // Ha eleve jó helyen van, nem csinálunk semmit
+            // Szabály 2: Ha eleve jó helyen van, nem csinálunk semmit
+            
+        } else if (path === 'adatvedelem') {
+            // ÚJ SZABÁLY: Ha a link végén az "adatvedelem" szó van, irány a Nyitóoldal!
+            window.location.replace("https://vps.smartfilllegal.hu/webhook/nyitooldal");
+            
         } else {
-            // Ha cégnevet írt be (bármi mást), mehet az n8n Routernek!
+            // Végső szabály: Ha egyik fenti sem igaz (tehát pl. cégnevet írt be), mehet az n8n Routernek!
             window.location.replace("https://vps.smartfilllegal.hu/webhook/router?cegnev=" + encodeURIComponent(path));
         }
     </script>
 </head>
 <body style="font-family: sans-serif; text-align: center; padding: 50px; background: #f8fafc;">
-    <p>Biztonságos átirányítás folyamatban...</p>
+    <p>Kérlek várj, átirányítunk a megfelelő oldalra...</p>
 </body>
 </html>
