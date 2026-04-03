@@ -2,13 +2,27 @@
 <html lang="hu">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=/noivallalkozok/" />
     <title>Átirányítás...</title>
     <script>
-        window.location.href = "/noivallalkozok/";
+        // 1. Kiolvassuk, mi van a webcímben a perjel után (pl. "Teszt Kft")
+        // A replace paranccsal levágjuk a felesleges perjeleket az elejéről és a végéről
+        var path = window.location.pathname.replace(/^\/|\/$/g, ''); 
+
+        // 2. Döntés az útvonalról
+        if (path === '' || path === 'index.html') {
+            // Ha a főoldalon vagyunk, megyünk a női vállalkozókhoz
+            window.location.href = "/noivallalkozok/";
+        } else if (path === 'noivallalkozok') {
+            // Ha már jó helyen vagyunk, nem csinálunk semmit
+        } else {
+            // Ha beírtak egy cégnevet (pl. /tesztkft), átküldjük az n8n Útválasztónak!
+            // Az encodeURIComponent biztosítja, hogy a szóközök és ékezetek ne törjék el a linket
+            window.location.href = "https://vps.smartfilllegal.hu/webhook/router?cegnev=" + encodeURIComponent(path);
+        }
     </script>
 </head>
-<body>
-    <p>Ha az oldal nem töltődik be automatikusan, <a href="/noivallalkozok/">kattints ide</a>.</p>
+<body style="font-family: sans-serif; text-align: center; padding: 50px; background: #f8fafc;">
+    <p>Átirányítás folyamatban...</p>
+    <p style="font-size: 12px; color: #64748b;">Ha az oldal nem töltődik be automatikusan, <a href="/noivallalkozok/" style="color: #2563eb;">kattints ide</a>.</p>
 </body>
 </html>
